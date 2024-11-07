@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balaji Auto and Tyres - Customer Entry Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .form-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .thank-you-message {
+            display: none;
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Balaji Auto and Tyres</h2>
+    <form id="customerForm">
+        <input type="text" id="customerName" name="customerName" placeholder="Customer Name" required>
+        <input type="text" id="contactNumber" name="contactNumber" placeholder="Contact Number" required>
+        <input type="text" id="vehicleName" name="vehicleName" placeholder="Vehicle Name" required>
+        <input type="text" id="vehicleNumber" name="vehicleNumber" placeholder="Vehicle Number" required>
+        <input type="number" id="kilometers" name="kilometers" placeholder="Kilometers" required>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <div class="thank-you-message" id="thankYouMessage">Thank you! Your entry has been submitted.</div>
+</div>
+
+<script>
+    function submitForm() {
+        const customerName = document.getElementById("customerName").value;
+        const contactNumber = document.getElementById("contactNumber").value;
+        const vehicleName = document.getElementById("vehicleName").value;
+        const vehicleNumber = document.getElementById("vehicleNumber").value;
+        const kilometers = document.getElementById("kilometers").value;
+
+        // Send data to the backend
+        fetch("http:// 192.168.31.1:8080/submit", {  // Replace with your IP and port
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        customerName: customerName,
+        contactNumber: contactNumber,
+        vehicleName: vehicleName,
+        vehicleNumber: vehicleNumber,
+        kilometers: kilometers
+    })
+})
+
+
+
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+
+            // Show thank you message
+            const thankYouMessage = document.getElementById("thankYouMessage");
+            thankYouMessage.style.display = "block";
+
+            // Clear form fields
+            document.getElementById("customerForm").reset();
+
+            // Hide the thank you message after 2 seconds
+            setTimeout(() => {
+                thankYouMessage.style.display = "none";
+            }, 2000);
+        })
+        .catch(error => console.error("Error:", error));
+    }
+</script>
